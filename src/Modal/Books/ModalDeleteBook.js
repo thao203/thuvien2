@@ -4,7 +4,7 @@ import request from '../../config/Connect';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function ModalDeleteBook({ showModalDeleteBook, setShowModalDeleteBook, masach }) {
+function ModalDeleteBook({ showModalDeleteBook, setShowModalDeleteBook, masach, onSuccess }) {
     const handleClose = () => setShowModalDeleteBook(false);
 
     const toastOptions = {
@@ -23,10 +23,16 @@ function ModalDeleteBook({ showModalDeleteBook, setShowModalDeleteBook, masach }
                 data: { masach: masach },
             });
 
-            toast.success(res.data.message,toastOptions);
+            toast.success(res.data.message, {
+                ...toastOptions,
+                onClose: () => {
+                    handleClose();
+                    if (onSuccess) onSuccess(); // Gọi onSuccess để làm mới dữ liệu
+                },
+            });
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra khi xóa sách';
-            toast.error(errorMessage, toastOptions );
+            toast.error(errorMessage, toastOptions);
         }
     };
 

@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './ManagementBooks.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import ModalAddBook from '../../../../Modal/Books/ModalAddBook';
 import ModalEditBook from '../../../../Modal/Books/ModalEditBook';
 import ModalDeleteBook from '../../../../Modal/Books/ModalDeleteBook';
@@ -11,6 +11,7 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ModalDetailBook from '../../../../Modal/Books/ModalDetailBook';
 
 const cx = classNames.bind(styles);
 
@@ -27,6 +28,7 @@ function ManagementBooks() {
     const [filteredBooks, setFilteredBooks] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const debounce = useDebounce(searchValue, 500);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
 
     // State cho form lọc
     const [filterCategory, setFilterCategory] = useState(null);
@@ -37,16 +39,19 @@ function ManagementBooks() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
 
-    const formatDate = (dateString) => {
+    // State để lưu hành động tạm thời
+    const [pendingAction, setPendingAction] = useState({ type: '', value: '' });
+
+    const formatDate = useCallback((dateString) => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
-    };
+    }, []);
 
-    // Lấy danh sách sách
+    // Lấy danh sách sách chỉ khi component mount hoặc refreshTrigger thay đổi
     useEffect(() => {
         request
             .get('/api/GetBooks')
@@ -57,7 +62,7 @@ function ManagementBooks() {
                 console.log('Danh sách sách:', res.data);
             })
             .catch((error) => console.error('Lỗi khi lấy sách:', error));
-    }, [showModalAddBook, showModalEditBook, showModalDeleteBook]);
+    }, [refreshTrigger]);
 
     // Tìm kiếm sách
     useEffect(() => {
@@ -87,22 +92,45 @@ function ManagementBooks() {
         fetchSearchResults();
     }, [debounce, dataBooks]);
 
+    // Đồng bộ mở modal khi pendingAction thay đổi
+    useEffect(() => {
+        if (pendingAction.type === 'edit' && pendingAction.value && idBook === pendingAction.value) {
+            setShowModalEditBook(true);
+        } else if (
+            pendingAction.type === 'delete' &&
+            pendingAction.value &&
+            masachBook === pendingAction.value
+        ) {
+            setShowModalDeleteBook(true);
+        } else if (
+            pendingAction.type === 'detail' &&
+            pendingAction.value &&
+            selectedMasach === pendingAction.value
+        ) {
+            setShowDetailModal(true);
+        }
+    }, [pendingAction, idBook, masachBook, selectedMasach]);
+
     // Trích xuất danh sách danh mục và nhà xuất bản
-    const categories = [...new Set(dataBooks.map((book) => book.tendanhmuc).filter(Boolean))].map(
-        (category) => ({
-            value: category,
-            label: category,
-        })
+    const categories = useMemo(
+        () =>
+            [...new Set(dataBooks.map((book) => book.tendanhmuc).filter(Boolean))].map((category) => ({
+                value: category,
+                label: category,
+            })),
+        [dataBooks]
     );
-    const publishers = [...new Set(dataBooks.map((book) => book.nhaxuatban).filter(Boolean))].map(
-        (publisher) => ({
-            value: publisher,
-            label: publisher,
-        })
+    const publishers = useMemo(
+        () =>
+            [...new Set(dataBooks.map((book) => book.nhaxuatban).filter(Boolean))].map((publisher) => ({
+                value: publisher,
+                label: publisher,
+            })),
+        [dataBooks]
     );
 
     // Hàm xử lý lọc sách
-    const handleFilterSubmit = (e) => {
+    const handleFilterSubmit = useCallback((e) => {
         e.preventDefault();
         if (filterStartDate && filterEndDate && new Date(filterStartDate) > new Date(filterEndDate)) {
             alert('Ngày bắt đầu không được lớn hơn ngày kết thúc');
@@ -137,10 +165,10 @@ function ManagementBooks() {
         setFilteredBooks(filtered);
         setCurrentPage(1);
         setShowFilterForm(false);
-    };
+    }, [dataBooks, filterCategory, filterPublisher, filterStartDate, filterEndDate]);
 
     // Reset bộ lọc
-    const handleFilterReset = () => {
+    const handleFilterReset = useCallback(() => {
         setFilterCategory(null);
         setFilterPublisher(null);
         setFilterStartDate('');
@@ -148,40 +176,52 @@ function ManagementBooks() {
         setFilteredBooks(dataBooks);
         setCurrentPage(1);
         setShowFilterForm(false);
-    };
+    }, [dataBooks]);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredBooks.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = useMemo(
+        () => filteredBooks.slice(indexOfFirstItem, indexOfLastItem),
+        [filteredBooks, indexOfFirstItem, indexOfLastItem]
+    );
     const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
 
-    const handlePageChange = (pageNumber) => {
+    const handlePageChange = useCallback((pageNumber) => {
         setCurrentPage(pageNumber);
-    };
+    }, []);
 
-    const handleShow = () => {
-        setShowModalAddBook(!showModalAddBook);
-    };
+    const handleShow = useCallback(() => {
+        setShowModalAddBook((prev) => !prev);
+    }, []);
 
-    const handleShow1 = (masach) => {
-        setShowModalEditBook(!showModalEditBook);
+    // Hàm xử lý hành động sửa
+    const handleShow1 = useCallback((masach) => {
         setIdBook(masach);
-    };
+        setPendingAction({ type: 'edit', value: masach });
+    }, []);
 
-    const handleShow2 = (masach) => {
+    // Hàm xử lý hành động xóa
+    const handleShow2 = useCallback((masach) => {
         setMasachBook(masach);
-        setShowModalDeleteBook(true);
-    };
+        setPendingAction({ type: 'delete', value: masach });
+    }, []);
 
-    const handleShowDetail = (masach) => {
+    // Hàm xử lý hành động xem chi tiết
+    const handleShowDetail = useCallback((masach) => {
         setSelectedMasach(masach);
-        setShowDetailModal(true);
-    };
+        setPendingAction({ type: 'detail', value: masach });
+    }, []);
 
-    const handleCloseDetail = () => {
+    const handleCloseDetail = useCallback(() => {
         setShowDetailModal(false);
         setSelectedMasach('');
-    };
+        setPendingAction({ type: '', value: '' });
+    }, []);
+
+    // Hàm để kích hoạt làm mới dữ liệu sau khi thêm/sửa/xóa
+    const handleDataChange = useCallback(() => {
+        setRefreshTrigger((prev) => !prev);
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
@@ -203,11 +243,11 @@ function ManagementBooks() {
                         </form>
                     </div>
                     <div className="col-12 col-md-3 text-center text-md-end">
-                        <button onClick={handleShow} className="btn btn-primary me-2">
+                        <button onClick={handleShow} className="btn btn-primary ebxme-2">
                             <i className="bi bi-plus-lg me-2"></i>Thêm Sách
                         </button>
                         <button
-                            onClick={() => setShowFilterForm(!showFilterForm)}
+                            onClick={() => setShowFilterForm((prev) => !prev)}
                             className="btn btn-secondary"
                         >
                             <i className="bi bi-filter me-2"></i>Lọc
@@ -398,18 +438,24 @@ function ManagementBooks() {
                 )}
             </div>
 
-            <ModalAddBook showModalAddBook={showModalAddBook} setShowModalAddBook={setShowModalAddBook} />
+            <ModalAddBook
+                showModalAddBook={showModalAddBook}
+                setShowModalAddBook={setShowModalAddBook}
+                onSuccess={handleDataChange}
+            />
             <ModalEditBook
                 showModalEditBook={showModalEditBook}
                 setShowModalEditBook={setShowModalEditBook}
                 idBook={idBook}
+                onSuccess={handleDataChange}
             />
             <ModalDeleteBook
                 showModalDeleteBook={showModalDeleteBook}
                 setShowModalDeleteBook={setShowModalDeleteBook}
                 masach={masachBook}
+                onSuccess={handleDataChange}
             />
-            <DetailBookModal
+            <ModalDetailBook
                 open={showDetailModal}
                 onClose={handleCloseDetail}
                 masach={selectedMasach}

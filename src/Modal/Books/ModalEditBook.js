@@ -8,7 +8,7 @@ import request from '../../config/Connect';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function ModalEditBook({ showModalEditBook, setShowModalEditBook, idBook }) {
+function ModalEditBook({ showModalEditBook, setShowModalEditBook, idBook, onSuccess }) {
     const handleClose = () => setShowModalEditBook(false);
 
     // State cho các trường dữ liệu
@@ -49,6 +49,28 @@ function ModalEditBook({ showModalEditBook, setShowModalEditBook, idBook }) {
         progress: undefined,
     };
 
+    // Reset trạng thái khi idBook thay đổi
+    useEffect(() => {
+        if (idBook) {
+            setMasach('');
+            setImg('');
+            setTensach('');
+            setTacgia('');
+            setNhaxuatban('');
+            setNamxb('');
+            setPhienban('');
+            setMadanhmuc('');
+            setCategorySearchQuery('');
+            setMota('');
+            setVitri([{ mavitri: '', soluong: '' }]);
+            setLocationSearchQueries(['']);
+            setShowLocationDropdowns([false]);
+            setFilteredLocations([[]]);
+            setPages('');
+            setPrice('');
+        }
+    }, [idBook]);
+
     // Lấy danh sách danh mục và vị trí từ database
     useEffect(() => {
         if (showModalEditBook) {
@@ -57,7 +79,7 @@ function ModalEditBook({ showModalEditBook, setShowModalEditBook, idBook }) {
         }
     }, [showModalEditBook]);
 
-    // Lấy dữ liệu sách khi modal mở hoặc idBook thay đổi
+    // Lấy dữ liệu sách khi modal mở và idBook có giá trị
     useEffect(() => {
         if (showModalEditBook && idBook) {
             fetchBookData();
@@ -120,8 +142,10 @@ function ModalEditBook({ showModalEditBook, setShowModalEditBook, idBook }) {
 
     const fetchBookData = async () => {
         try {
-            const res = await request.get('/api/GetBooks');
-            const bookData = res.data.find((book) => book.masach === idBook);
+            const res = await request.get('/api/SearchBookByMaSach', {
+                params: { masach: idBook },
+            });
+            const bookData = res.data;
             if (bookData) {
                 setMasach(bookData.masach || '');
                 setImg(bookData.img || '');
@@ -343,7 +367,10 @@ function ModalEditBook({ showModalEditBook, setShowModalEditBook, idBook }) {
 
             toast.success(res.data.message || 'Cập nhật sách thành công!', {
                 ...toastOptions,
-                onClose: () => handleClose(),
+                onClose: () => {
+                    handleClose();
+                    if (onSuccess) onSuccess(); // Gọi onSuccess để làm mới dữ liệu
+                },
             });
         } catch (error) {
             console.error('Error updating book:', error.response?.data);

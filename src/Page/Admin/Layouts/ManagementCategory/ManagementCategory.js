@@ -108,16 +108,7 @@ function ManagementCategory() {
                     setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
                 }
             } catch (error) {
-                if (error.response?.status === 400) {
-                    toast.error('Vui lòng nhập tên danh mục để tìm kiếm!', { autoClose: 1000 });
-                    setDataCategory([]);
-                } else if (error.response?.status === 404) {
-                    toast.info('Không tìm thấy danh mục nào phù hợp!', { autoClose: 1000 });
-                    setDataCategory([]);
-                } else {
-                    toast.error('Lỗi khi tìm kiếm danh mục!', { autoClose: 1000 });
-                    setDataCategory([]);
-                }
+                setDataCategory([]);
             }
         };
 

@@ -8,7 +8,7 @@ import request from '../../config/Connect';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function ModalAddBook({ showModalAddBook, setShowModalAddBook }) {
+function ModalAddBook({ showModalAddBook, setShowModalAddBook, onSuccess }) {
     const handleClose = () => setShowModalAddBook(false);
 
     const [masach, setMasach] = useState('');
@@ -128,7 +128,7 @@ function ModalAddBook({ showModalAddBook, setShowModalAddBook }) {
             if (matchedCategories.length > 0) {
                 const category = matchedCategories[0];
                 setMadanhmuc(category.madanhmuc);
-                setCategorySearchQuery(category.madanhmuc); // Chỉ hiển thị madanhmuc
+                setCategorySearchQuery(category.madanhmuc);
                 setShowCategoryDropdown(false);
                 toast.success(`Đã chọn danh mục: ${category.madanhmuc}`, toastOptions);
             } else {
@@ -144,7 +144,7 @@ function ModalAddBook({ showModalAddBook, setShowModalAddBook }) {
 
     const handleSelectCategory = (category) => {
         setMadanhmuc(category.madanhmuc);
-        setCategorySearchQuery(category.madanhmuc); // Chỉ hiển thị madanhmuc
+        setCategorySearchQuery(category.madanhmuc);
         setShowCategoryDropdown(false);
     };
 
@@ -291,7 +291,10 @@ function ModalAddBook({ showModalAddBook, setShowModalAddBook }) {
 
             toast.success(res.data.message || 'Thêm sách thành công!', {
                 ...toastOptions,
-                onClose: () => handleClose(),
+                onClose: () => {
+                    handleClose();
+                    if (onSuccess) onSuccess(); // Gọi onSuccess để làm mới dữ liệu
+                },
             });
         } catch (error) {
             toast.error(error.response?.data?.message || 'Đã xảy ra lỗi khi thêm sách!', toastOptions);

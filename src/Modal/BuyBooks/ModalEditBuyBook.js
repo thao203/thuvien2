@@ -132,7 +132,7 @@ function ModalEditBuyBook({ showModalEditBuyBook, setShowModalEditBuyBook, maphi
                                         onChange={(e) =>
                                             setFormData({ ...formData, masach: e.target.value })
                                         }
-                                        disabled={loading}
+                                        disabled
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -167,7 +167,7 @@ function ModalEditBuyBook({ showModalEditBuyBook, setShowModalEditBuyBook, maphi
                                         onChange={(e) =>
                                             setFormData({ ...formData, mavitri: e.target.value })
                                         }
-                                        disabled={loading || locations.length === 0}
+                                        disabled
                                     >
                                         <option value="">Chọn mã vị trí</option>
                                         {locations.map((location) => (
