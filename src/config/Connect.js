@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const baseURL = window.location.hostname === 'localhost'
-    ? 'http://localhost:5000'
-    : 'http://172.31.27.177:5000';
+const baseURL = 'https://server-plum-xi.vercel.app';
 
 const request = axios.create({
     baseURL,
