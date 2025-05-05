@@ -5,21 +5,9 @@ import { useEffect, useState, useCallback } from 'react';
 import ModalAddClearanceBooks from '../../../../Modal/ClearanceBooks/ModalAddClearanceBooks';
 import ModalEditClearanceBooks from '../../../../Modal/ClearanceBooks/ModalEditClearanceBooks';
 import ModalDeleteClearanceBooks from '../../../../Modal/ClearanceBooks/ModalDeleteClearanceBooks';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const cx = classNames.bind(styles);
-
-const toastOptions = {
-    position: 'top-right',
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
 
 const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -41,18 +29,18 @@ function ClearanceBooks() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const [shouldRefresh, setShouldRefresh] = useState(false);
-    const [month, setMonth] = useState(new Date().getMonth() + 1); // Thêm state cho tháng
-    const [year, setYear] = useState(new Date().getFullYear()); // Thêm state cho năm
+    const [month, setMonth] = useState(new Date().getMonth() + 1);
+    const [year, setYear] = useState(new Date().getFullYear());
 
     const fetchClearanceBooks = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await request.get('/api/getAllClearanceBooks', {
-                params: { month, year }
+            const res = await request.get('/api/getClearanceBooksByMonthYear', {
+                params: { month, year },
             });
             setDataClearanceBooks(res.data.clearanceBooks || []);
         } catch (error) {
-
+            setDataClearanceBooks([]);
         } finally {
             setLoading(false);
         }
@@ -67,7 +55,7 @@ function ClearanceBooks() {
         try {
             const res = await request.get('/api/exportClearanceBooks', {
                 responseType: 'blob',
-                params: { month, year }
+                params: { month, year },
             });
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
@@ -76,9 +64,8 @@ function ClearanceBooks() {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            toast.success('Xuất file Excel thành công!', toastOptions);
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Lỗi khi xuất file Excel!', toastOptions);
+            // Không hiển thị thông báo lỗi
         } finally {
             setLoading(false);
         }
@@ -87,14 +74,13 @@ function ClearanceBooks() {
     const handleChangeStatus = async (masachthanhly) => {
         setLoading(true);
         try {
-            const res = await request.post('/api/changeClearanceBookStatus', {
+            await request.post('/api/changeClearanceBookStatus', {
                 masachthanhly,
                 trangthai: true,
             });
-            toast.success(res.data.message, toastOptions);
-            setShouldRefresh(prev => !prev);
+            setShouldRefresh((prev) => !prev);
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Lỗi khi thay đổi trạng thái!', toastOptions);
+            // Không hiển thị thông báo lỗi
         } finally {
             setLoading(false);
         }
@@ -111,7 +97,7 @@ function ClearanceBooks() {
     };
 
     const handleSuccess = () => {
-        setShouldRefresh(prev => !prev);
+        setShouldRefresh((prev) => !prev);
     };
 
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -125,7 +111,6 @@ function ClearanceBooks() {
 
     return (
         <div className={cx('wrapper')}>
-            <ToastContainer />
             <div className="container my-4">
                 <div className="row align-items-center justify-content-between g-3">
                     <div className="col-12 col-md-6 text-center text-md-start">
@@ -133,7 +118,6 @@ function ClearanceBooks() {
                     </div>
                     <div className="col-12 col-md-6 text-center text-md-end">
                         <div className="d-flex justify-content-end gap-2 align-items-center">
-                            {/* Nút chọn tháng */}
                             <select
                                 className="form-select shadow-sm"
                                 value={month}
@@ -146,7 +130,6 @@ function ClearanceBooks() {
                                     </option>
                                 ))}
                             </select>
-                            {/* Nút chọn năm */}
                             <select
                                 className="form-select shadow-sm"
                                 value={year}
@@ -225,7 +208,6 @@ function ClearanceBooks() {
                                                 <button
                                                     onClick={() => handleShowDelete(item.masachthanhly)}
                                                     className="btn btn-danger btn-sm"
-                                                    // disabled={loading || item.trangthai}
                                                 >
                                                     <i className="bi bi-trash me-1"></i> Xóa
                                                 </button>
@@ -269,10 +251,7 @@ function ClearanceBooks() {
                                     key={page}
                                     className={`page-item ${currentPage === page ? 'active' : ''}`}
                                 >
-                                    <button
-                                        className="page-link"
-                                        onClick={() => handlePageChange(page)}
-                                    >
+                                    <button className="page-link" onClick={() => handlePageChange(page)}>
                                         {page}
                                     </button>
                                 </li>
