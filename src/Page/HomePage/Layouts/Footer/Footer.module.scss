@@ -1,0 +1,137 @@
+.footer {
+  background: linear-gradient(90deg, #333, #444);
+  color: #fff;
+  padding: 40px 0 20px;
+  width: 100%;
+  font-family: 'Arial', sans-serif;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    > div {
+      padding: 0 15px;
+      flex: 1;
+      min-width: 250px;
+    }
+  }
+
+  h5 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #555;
+    padding-bottom: 5px;
+    color: #ddd;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    a {
+      color: #b0b0b0;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      &:hover {
+        color: #fff;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      a {
+        color: #b0b0b0;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #fff;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .copyright {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    border-top: 1px solid #555;
+    padding-top: 10px;
+    color: #bbb;
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: 20px 0 10px; // Giảm padding
+    .row {
+      flex-direction: column;
+      text-align: center;
+
+      > div {
+        margin-bottom: 20px;
+        min-width: unset; // Bỏ giới hạn chiều rộng tối thiểu
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    h5 {
+      font-size: 16px;
+    }
+
+    p, .link-list li {
+      font-size: 13px;
+      justify-content: center;
+    }
+
+    .link-list li a, p a {
+      flex-direction: row;
+      gap: 5px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px 0 5px;
+    h5 {
+      font-size: 14px;
+    }
+    p, .link-list li {
+      font-size: 12px;
+    }
+    .copyright {
+      font-size: 10px;
+    }
+  }
+}

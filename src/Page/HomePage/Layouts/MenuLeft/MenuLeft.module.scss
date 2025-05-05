@@ -1,0 +1,125 @@
+.menu-left {
+  width: 250px;
+  background: linear-gradient(180deg, #ffffff, #f0f2f5);
+  padding: 10px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+
+  &.collapsed {
+    width: 60px;
+  }
+
+  .toggle-button {
+    display: flex;
+    justify-content: flex-end;
+    //padding: 1px 1px;
+
+    .MuiIconButton-root {
+      color: #555;
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+  }
+
+  .menu-list {
+    padding: 0;
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 12px;
+    width: calc(100% - 20px);
+    border-radius: 4px;
+    margin: 6.5px 10px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    box-sizing: border-box;
+
+    &.active {
+      background: linear-gradient(90deg, #1976d2, #42a5f5);
+
+      .menu-text {
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .menu-icon {
+        color: #fff;
+      }
+    }
+
+    &:hover {
+      background-color: #e3f2fd;
+
+      .menu-text {
+        color: #1976d2;
+      }
+
+      .menu-icon {
+        color: #1976d2;
+      }
+    }
+
+    .MuiListItemButton-root {
+      padding: 12px 20px;
+    }
+  }
+
+  .menu-icon {
+    color: #666;
+    min-width: 40px;
+    transition: color 0.3s ease;
+  }
+
+  .menu-text {
+    color: #333;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    transition: color 0.3s ease;
+  }
+
+  // Responsive cho điện thoại
+  @media (max-width: 768px) {
+    width: 200px; // Thu gọn chiều rộng khi mở
+    &.collapsed {
+      width: 50px; // Chiều rộng khi thu gọn
+      .menu-list {
+        display: none; // Ẩn menu-list khi collapsed trên mobile
+      }
+    }
+    .menu-text {
+      font-size: 14px;
+    }
+    .menu-icon {
+      min-width: 30px;
+    }
+    .menu-item {
+      padding: 6px 10px;
+      margin: 5px 8px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    width: 50%; // Chiếm toàn bộ chiều rộng trên mobile khi mở
+    position: fixed;
+    top: 60px; // Dưới header
+    left: 0;
+    z-index: 1000;
+    height: auto;
+    &.collapsed {
+      width: 35px; // Thu gọn hơn nữa trên mobile nhỏ
+      .menu-list {
+        display: none; // Ẩn menu-list khi collapsed
+      }
+    }
+    .menu-text {
+      font-size: 12px;
+    }
+  }
+}

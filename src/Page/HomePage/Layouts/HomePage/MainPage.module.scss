@@ -1,0 +1,15 @@
+.banner {
+  width: 200px; /* Chiều rộng mặc định */
+  max-width: 100%;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%; /* Trên mobile, banner chiếm toàn bộ chiều rộng */
+  }
+}

@@ -1,0 +1,120 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // Đảm bảo bao phủ toàn bộ chiều cao màn hình
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-container {
+    display: flex;
+    margin-top: 60px; // Chừa chỗ cho header
+    flex: 1;
+}
+
+.menu-left {
+    position: sticky;
+    top: 60px; // Cố định ở dưới header
+    left: 0;
+    height: fit-content; // Để chiều cao phù hợp với nội dung
+    max-height: calc(100vh - 60px); // Giới hạn chiều cao để không vượt quá màn hình
+    background-color: #f8f9fa;
+    overflow-y: auto; // Cho phép cuộn khi nội dung dài
+    z-index: 900;
+    box-sizing: border-box;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    padding-bottom: 50px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.header-page-admin {
+    width: 100%;
+    padding: 15px 0;
+    text-align: center; // Căn giữa thay vì justify-content: space-around
+    .img-admin {
+        margin-bottom: 10px;
+        img {
+            width: 100px; // Giảm kích thước ảnh để phù hợp với listbook style
+            border-radius: 50%;
+            border: 2px solid #ccc; // Thêm viền nhẹ nhàng
+        }
+    }
+    .info-admin {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; // Giảm gap để gọn gàng hơn
+        h3 { // Thay h1 bằng h3 để đồng bộ với kích thước chữ thông thường
+            font-weight: 700;
+            margin: 0;
+            color: #333;
+        }
+        .position {
+            display: flex;
+            justify-content: center;
+            gap: 10px; // Giảm gap để gọn hơn
+            span {
+                font-weight: 600;
+                padding: 5px 10px;
+                border-radius: 12px;
+                &.bg-dark {
+                    background-color: #343a40;
+                    color: #fff;
+                }
+                &.bg-success {
+                    background-color: #28a745;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+.info-account {
+    width: 100%; // Để full width trong content thay vì giới hạn 80%
+    padding: 20px;
+    box-sizing: border-box;
+    h5 {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    .input-group {
+        margin-bottom: 15px;
+        .input-group-text {
+            background-color: #343a40; // Đồng bộ với màu dark của badge
+            color: #fff;
+            border: none;
+        }
+        .form-control {
+            border: 1px solid #ced4da; // Thêm viền nhẹ cho input
+            &:focus {
+                border-color: #4aafe4; // Màu xanh nhẹ khi focus, đồng bộ với position span
+                box-shadow: none;
+            }
+            &[readonly] {
+                background-color: #f8f9fa; // Màu nền nhạt giống menu-left
+                cursor: not-allowed;
+            }
+        }
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 8px 20px;
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+}

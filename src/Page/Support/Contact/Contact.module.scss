@@ -1,0 +1,111 @@
+
+.announcement {
+  background-color: #ffc107;
+  padding: 10px 0;
+  color: #333;
+  font-size: 14px;
+
+  i {
+    color: #007bff;
+  }
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Đảm bảo bao phủ toàn bộ chiều cao màn hình
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-container {
+  display: flex;
+  margin-top: 60px; // Chừa chỗ cho header
+  flex: 1;
+}
+
+.menu-left {
+  position: sticky;
+  top: 60px; // Cố định ở dưới header
+  left: 0;
+  height: fit-content; // Để chiều cao phù hợp với nội dung
+  max-height: calc(100vh - 60px); // Giới hạn chiều cao để không vượt quá màn hình
+  background-color: #f8f9fa;
+  overflow-y: auto; // Cho phép cuộn khi nội dung dài
+  z-index: 900;
+  box-sizing: border-box;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  padding-bottom: 50px;
+  overflow-y: auto;
+  box-sizing: border-box;
+
+  .section-title {
+    color: #007bff;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    border-radius: 8px;
+    overflow: hidden;
+
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .card-text {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+      font-size: 14px;
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      }
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+}
+
+.footer {
+  // Placeholder cho footer của bạn
+}

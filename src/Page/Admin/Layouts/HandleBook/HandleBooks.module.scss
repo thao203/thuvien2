@@ -1,0 +1,58 @@
+.wrapper {
+    padding: 20px;
+
+    .table {
+        th, td {
+            vertical-align: middle; // Căn giữa nội dung
+        }
+
+        // CSS cho cột Hành Động
+        .action-buttons {
+            display: flex;
+            gap: 10px; // Tăng khoảng cách giữa các button
+            justify-content: center; // Căn giữa các button trong ô
+
+            .btn {
+                padding: 6px 12px; // Tăng padding cho vừa text
+                font-size: 0.95rem; // Kích thước chữ hợp lý
+                border-radius: 4px; // Bo góc nhẹ
+                display: flex; // Căn icon và text
+                align-items: center; // Căn giữa icon và text
+                transition: all 0.3s ease; // Hiệu ứng mượt mà
+
+                // Hiệu ứng hover
+                &:hover {
+                    transform: translateY(-2px); // Nâng nhẹ button khi hover
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); // Thêm bóng
+                }
+
+                // Đảm bảo icon và text không bị chồng lấn
+                i {
+                    margin-right: 4px; // Khoảng cách giữa icon và text
+                }
+            }
+
+            // Tùy chỉnh màu sắc button
+            .btn-warning {
+                background-color: #f39c12; // Màu vàng đậm
+                border-color: #f39c12;
+                color: white;
+
+                &:hover {
+                    background-color: #e67e22; // Màu khi hover
+                    border-color: #e67e22;
+                }
+            }
+
+            .btn-danger {
+                background-color: #e74c3c; // Màu đỏ đậm
+                border-color: #e74c3c;
+
+                &:hover {
+                    background-color: #c0392b; // Màu khi hover
+                    border-color: #c0392b;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+#loading {
+    animation: spinner 1s linear infinite;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // Đảm bảo bao phủ toàn bộ chiều cao màn hình
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-container {
+    display: flex;
+    margin-top: 60px; // Chừa chỗ cho header
+    flex: 1;
+}
+
+.menu-left {
+    position: sticky;
+    top: 60px; // Cố định ở dưới header
+    left: 0;
+    height: fit-content; // Để chiều cao phù hợp với nội dung
+    max-height: calc(100vh - 60px); // Giới hạn chiều cao để không vượt quá màn hình
+    background-color: #f8f9fa;
+    overflow-y: auto; // Cho phép cuộn khi nội dung dài
+    z-index: 900;
+    box-sizing: border-box;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    padding-bottom: 50px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
