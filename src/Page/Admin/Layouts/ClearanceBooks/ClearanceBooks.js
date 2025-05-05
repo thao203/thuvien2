@@ -41,8 +41,8 @@ function ClearanceBooks() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const [shouldRefresh, setShouldRefresh] = useState(false);
-    const [month, setMonth] = useState(new Date().getMonth() + 1); // Thêm state cho tháng
-    const [year, setYear] = useState(new Date().getFullYear()); // Thêm state cho năm
+    const [month, setMonth] = useState(new Date().getMonth() + 1); // ThÃªm state cho thÃ¡ng
+    const [year, setYear] = useState(new Date().getFullYear()); // ThÃªm state cho nÄƒm
 
     const fetchClearanceBooks = useCallback(async () => {
         setLoading(true);
@@ -76,9 +76,9 @@ function ClearanceBooks() {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            toast.success('Xuất file Excel thành công!', toastOptions);
+            toast.success('Xuáº¥t file Excel thÃ nh cÃ´ng!', toastOptions);
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Lỗi khi xuất file Excel!', toastOptions);
+            toast.error(error.response?.data?.message || 'Lá»—i khi xuáº¥t file Excel!', toastOptions);
         } finally {
             setLoading(false);
         }
@@ -94,7 +94,7 @@ function ClearanceBooks() {
             toast.success(res.data.message, toastOptions);
             setShouldRefresh(prev => !prev);
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Lỗi khi thay đổi trạng thái!', toastOptions);
+            toast.error(error.response?.data?.message || 'Lá»—i khi thay Ä‘á»•i tráº¡ng thÃ¡i!', toastOptions);
         } finally {
             setLoading(false);
         }
@@ -129,11 +129,11 @@ function ClearanceBooks() {
             <div className="container my-4">
                 <div className="row align-items-center justify-content-between g-3">
                     <div className="col-12 col-md-6 text-center text-md-start">
-                        <h4 className="mb-0 fw-bold">Quản Lý Sách Thanh Lý</h4>
+                        <h4 className="mb-0 fw-bold">Quáº£n LÃ½ SÃ¡ch Thanh LÃ½</h4>
                     </div>
                     <div className="col-12 col-md-6 text-center text-md-end">
                         <div className="d-flex justify-content-end gap-2 align-items-center">
-                            {/* Nút chọn tháng */}
+                            {/* NÃºt chá»n thÃ¡ng */}
                             <select
                                 className="form-select shadow-sm"
                                 value={month}
@@ -142,11 +142,11 @@ function ClearanceBooks() {
                             >
                                 {Array.from({ length: 12 }, (_, i) => (
                                     <option key={i + 1} value={i + 1}>
-                                        Tháng {i + 1}
+                                        ThÃ¡ng {i + 1}
                                     </option>
                                 ))}
                             </select>
-                            {/* Nút chọn năm */}
+                            {/* NÃºt chá»n nÄƒm */}
                             <select
                                 className="form-select shadow-sm"
                                 value={year}
@@ -164,14 +164,14 @@ function ClearanceBooks() {
                                 className="btn btn-primary px-4 flex-fill flex-md-grow-0"
                                 disabled={loading}
                             >
-                                <i className="bi bi-plus-lg me-2"></i>Thêm
+                                <i className="bi bi-plus-lg me-2"></i>ThÃªm
                             </button>
                             <button
                                 onClick={handleExportClearanceBooks}
                                 className="btn btn-success px-4 flex-fill flex-md-grow-0"
                                 disabled={loading}
                             >
-                                <i className="bi bi-file-earmark-excel me-2"></i>Xuất Excel
+                                <i className="bi bi-file-earmark-excel me-2"></i>Xuáº¥t Excel
                             </button>
                         </div>
                     </div>
@@ -190,15 +190,15 @@ function ClearanceBooks() {
                         <table className="table table-striped table-hover table-bordered align-middle">
                             <thead className="table-dark">
                             <tr>
-                                <th scope="col">Mã Thanh Lý</th>
-                                <th scope="col">Mã Sách</th>
-                                <th scope="col">Số Lượng</th>
-                                <th scope="col">Cơ Sở</th>
-                                <th scope="col">Mã Vị Trí</th>
-                                <th scope="col">Lý Do</th>
-                                <th scope="col">Ngày Cập Nhập</th>
-                                <th scope="col">Trạng Thái</th>
-                                <th scope="col">Hành Động</th>
+                                <th scope="col">MÃ£ Thanh LÃ½</th>
+                                <th scope="col">MÃ£ SÃ¡ch</th>
+                                <th scope="col">Sá»‘ LÆ°á»£ng</th>
+                                <th scope="col">CÆ¡ Sá»Ÿ</th>
+                                <th scope="col">MÃ£ Vá»‹ TrÃ­</th>
+                                <th scope="col">LÃ½ Do</th>
+                                <th scope="col">NgÃ y Cáº­p Nháº­p</th>
+                                <th scope="col">Tráº¡ng ThÃ¡i</th>
+                                <th scope="col">HÃ nh Äá»™ng</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -212,7 +212,7 @@ function ClearanceBooks() {
                                         <td>{item.mavitri}</td>
                                         <td>{item.lydo}</td>
                                         <td>{formatDate(item.ngaycapnhat)}</td>
-                                        <td>{item.trangthai ? 'Đã Thanh Lý' : 'Đang Thanh Lý'}</td>
+                                        <td>{item.trangthai ? 'ÄÃ£ Thanh LÃ½' : 'Äang Thanh LÃ½'}</td>
                                         <td>
                                             <div className="d-flex gap-2 justify-content-center flex-wrap">
                                                 <button
@@ -220,21 +220,21 @@ function ClearanceBooks() {
                                                     className="btn btn-warning btn-sm"
                                                     disabled={loading || item.trangthai}
                                                 >
-                                                    <i className="bi bi-pencil me-1"></i> Sửa
+                                                    <i className="bi bi-pencil me-1"></i> Sá»­a
                                                 </button>
                                                 <button
                                                     onClick={() => handleShowDelete(item.masachthanhly)}
                                                     className="btn btn-danger btn-sm"
                                                     // disabled={loading || item.trangthai}
                                                 >
-                                                    <i className="bi bi-trash me-1"></i> Xóa
+                                                    <i className="bi bi-trash me-1"></i> XÃ³a
                                                 </button>
                                                 <button
                                                     onClick={() => handleChangeStatus(item.masachthanhly)}
                                                     className="btn btn-info btn-sm"
                                                     disabled={loading || item.trangthai}
                                                 >
-                                                    <i className="bi bi-check-circle me-1"></i> Thanh Lý
+                                                    <i className="bi bi-check-circle me-1"></i> Thanh LÃ½
                                                 </button>
                                             </div>
                                         </td>
@@ -243,7 +243,7 @@ function ClearanceBooks() {
                             ) : (
                                 <tr>
                                     <td colSpan="9" className="text-center py-4">
-                                        Không tìm thấy sách thanh lý nào
+                                        KhÃ´ng tÃ¬m tháº¥y sÃ¡ch thanh lÃ½ nÃ o
                                     </td>
                                 </tr>
                             )}
@@ -261,7 +261,7 @@ function ClearanceBooks() {
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage === 1}
                                 >
-                                    Trước
+                                    TrÆ°á»›c
                                 </button>
                             </li>
                             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
