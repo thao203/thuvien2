@@ -218,7 +218,6 @@ function HistoryBook() {
                 setDataBooks(updatedData);
             } catch (error) {
                 setDataBooks([]);
-                toast.error('Lỗi khi tải dữ liệu lịch sử mượn!', toastOptions);
             }
         }
     };
