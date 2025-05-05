@@ -224,6 +224,12 @@ function HandleBook() {
         }
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Ngăn hành vi mặc định của Enter
+        }
+    };
+
     // Tìm kiếm phiếu mượn
     const fetchSearchResults = async () => {
         try {
@@ -242,7 +248,6 @@ function HandleBook() {
             setCurrentPage(1);
         } catch (err) {
             setFilteredRecords([]);
-            toast.error('Không tìm thấy phiếu mượn!');
         }
     };
 
@@ -526,6 +531,7 @@ function HandleBook() {
                                 placeholder="Tìm kiếm..."
                                 aria-label="Search"
                                 value={searchValue}
+                                onKeyDown={handleKeyDown}
                                 onChange={(e) => setSearchValue(e.target.value)}
                             />
                         </form>

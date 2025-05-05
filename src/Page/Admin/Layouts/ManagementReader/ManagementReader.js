@@ -93,14 +93,10 @@ function ManagementReader() {
                 }
             } catch (error) {
                 if (error.response?.status === 400) {
-                    toast.error('Thiếu mã sinh viên!', { autoClose: 1000 });
                     setDataReader([]);
                 } else if (error.response?.status === 404) {
-                    toast.info('Không tìm thấy bạn đọc nào!', { autoClose: 1000 });
                     setDataReader([]);
                 } else {
-                    console.error('Lỗi tìm kiếm:', error);
-                    toast.error('Lỗi khi tìm kiếm bạn đọc!', { autoClose: 1000 });
                     setDataReader([]);
                 }
             }

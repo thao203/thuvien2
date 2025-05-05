@@ -94,7 +94,6 @@ function ManagementUser() {
             } catch (error) {
                 if (error.response?.status === 404) {
                     setDataUser([]);
-                    toast.info('Không tìm thấy người dùng nào!', { autoClose: 1000 });
                 } else {
                     console.error('Lỗi tìm kiếm:', error);
                 }

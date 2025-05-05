@@ -206,6 +206,12 @@ function ManagementBooks() {
         setPendingAction({ type: 'delete', value: masach });
     }, []);
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Ngăn hành vi mặc định của Enter
+        }
+    };
+
     // Hàm xử lý hành động xem chi tiết
     const handleShowDetail = useCallback((masach) => {
         setSelectedMasach(masach);
@@ -238,6 +244,7 @@ function ManagementBooks() {
                                 placeholder="Tìm tên sách"
                                 aria-label="Search"
                                 value={searchValue}
+                                onKeyDown={handleKeyDown}
                                 onChange={(e) => setSearchValue(e.target.value)}
                             />
                         </form>
