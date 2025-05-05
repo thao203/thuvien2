@@ -7,7 +7,6 @@ import Col from 'react-bootstrap/Col';
 import request from '../../config/Connect';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 function ModalAddBook({ showModalAddBook, setShowModalAddBook, onSuccess }) {
     const handleClose = () => setShowModalAddBook(false);
 
