@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'https://server-plum-xi.vercel.app';
+const baseURL = 'https://latn.onrender.com';
 
 const request = axios.create({
     baseURL,
