@@ -7,53 +7,44 @@ import MainBooks from '../ListBook/Mainbook';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import request from '../../../../../config/Connect';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, CircularProgress } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const cx = classNames.bind(styles);
 
 function DetailCategory() {
     const [books, setBooks] = useState([]);
-    const [categoryName, setCategoryName] = useState('');
-    const { madanhmuc } = useParams(); // Lấy madanhmuc từ URL
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { madanhmuc } = useParams();
     const navigate = useNavigate();
 
-
     useEffect(() => {
-        document.title = "Sách theo danh mục";
+        document.title = madanhmuc ? `Sách danh mục ${madanhmuc}` : 'Sách theo danh mục';
+
         const fetchBooksByCategory = async () => {
-            console.log('madanhmuc từ URL:', madanhmuc);
+            setLoading(true);
+            setError(null);
+
             if (!madanhmuc) {
                 setBooks([]);
-                setCategoryName('Không có mã danh mục');
+                setError('Không có mã danh mục');
+                setLoading(false);
                 return;
             }
 
             try {
-                const res = await request.get('/api/getBooksByCategory', {
-                    params: { madanhmuc: madanhmuc },
+                const booksRes = await request.get('/api/getBooksByCategory', {
+                    params: { madanhmuc },
                 });
-                setBooks(res.data.books);
 
-                const categoryRes = await request.get('/api/getAllCategories');
-                const category = categoryRes.data.data.find(
-                    (cat) => cat.madanhmuc === madanhmuc
-                );
-                setCategoryName(category ? category.tendanhmuc : madanhmuc);
-                console.log('Danh sách sách:', res.data.books);
+                setBooks(booksRes.data?.books || []);
             } catch (error) {
-                console.error('Lỗi khi lấy sách theo danh mục:', error);
-                if (error.response?.status === 404) {
-                    setBooks([]);
-                    const categoryRes = await request.get('/api/getAllCategories');
-                    const category = categoryRes.data.data.find(
-                        (cat) => cat.madanhmuc === madanhmuc
-                    );
-                    setCategoryName(category ? category.tendanhmuc : madanhmuc);
-                } else if (error.response?.status === 400) {
-                    setBooks([]);
-                    setCategoryName(madanhmuc || 'Không có mã danh mục');
-                }
+                console.error('Lỗi khi lấy dữ liệu:', error);
+                setError('Không có sách tại danh mục này.');
+                setBooks([]);
+            } finally {
+                setTimeout(() => setLoading(false), 300); // Độ trễ tối thiểu 300ms
             }
         };
 
@@ -77,36 +68,31 @@ function DetailCategory() {
 
                 <main className={cx('content')}>
                     <Box sx={{ padding: 2 }}>
-                        {/* Container cho nút và tiêu đề */}
                         <Box
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'space-between', // Đẩy nút sang trái, tiêu đề ra giữa
-                                mb: 3, // Khoảng cách dưới
+                                justifyContent: 'space-between',
+                                mb: 3,
                                 position: 'relative',
                             }}
                         >
-                            {/* Nút Quay lại */}
                             <Button
                                 variant="outlined"
                                 startIcon={<ArrowBackIcon />}
                                 onClick={handleBack}
+                                aria-label="Quay lại danh sách danh mục"
                                 sx={{
                                     borderColor: '#3498DB',
                                     color: '#3498DB',
-                                    '&:hover': {
-                                        borderColor: '#2C3E50',
-                                        color: '#2C3E50',
-                                    },
+                                    '&:hover': { borderColor: '#2C3E50', color: '#2C3E50' },
                                     textTransform: 'none',
-                                    zIndex: 10, // Đảm bảo nút không bị đè
+                                    zIndex: 10,
                                 }}
                             >
                                 Quay lại
                             </Button>
 
-                            {/* Tiêu đề */}
                             <Typography
                                 variant="h4"
                                 sx={{
@@ -117,18 +103,24 @@ function DetailCategory() {
                                     letterSpacing: 1.5,
                                     borderBottom: '3px solid #3498DB',
                                     paddingBottom: '5px',
-                                    flexGrow: 1, // Để tiêu đề chiếm không gian còn lại
+                                    flexGrow: 1,
                                 }}
                             >
-                                📚 {categoryName ? `Danh mục: ${categoryName}` : 'Danh mục sách'}
+                                📚 Danh mục: {madanhmuc || 'Sách'}
                             </Typography>
 
-                            {/* Placeholder để cân bằng layout nếu cần */}
-                            <Box sx={{ width: '80px' }} /> {/* Điều chỉnh độ rộng nếu cần */}
+                            <Box sx={{ width: '80px' }} />
                         </Box>
 
-                        {/* Nội dung sách */}
-                        {books.length > 0 ? (
+                        {loading ? (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                                <CircularProgress />
+                            </Box>
+                        ) : error ? (
+                            <Typography variant="body1" sx={{ textAlign: 'center', mt: 2, color: '#d32f2f' }}>
+                                {error}
+                            </Typography>
+                        ) : books.length > 0 ? (
                             <MainBooks dataBooks={books} isMenuOpen={true} />
                         ) : (
                             <Typography variant="body1" sx={{ textAlign: 'center', mt: 2 }}>

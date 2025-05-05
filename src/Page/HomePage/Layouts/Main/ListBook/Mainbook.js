@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ModalRequestBook from '../Modal/ModalRequestBook';
 import ModalCart from '../Modal/ModalCart';
-import request  from '../../../../../config/Connect';
+import request from '../../../../../config/Connect';
 import {
     Card,
     CardContent,
@@ -12,10 +12,13 @@ import {
     Box,
     Pagination,
     PaginationItem,
-    IconButton, Grow, Fade, Slide,
+    IconButton,
+    Grow,
+    Fade,
+    Slide,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import { keyframes } from '@emotion/react'; // Thêm import keyframes từ @emotion/react
+import { keyframes } from '@emotion/react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const ITEMS_PER_PAGE = 16;
@@ -32,19 +35,19 @@ const float = keyframes`
     100% { transform: translateY(0); }
 `;
 
-function MainBooks({ isMenuOpen, searchQuery = '', sortOption = '' }) {
+function MainBooks({ isMenuOpen, searchQuery = '', sortOption = '', dataBooks: propDataBooks }) {
     const [showRequest, setShowRequest] = useState(false);
     const [showCart, setShowCart] = useState(false);
     const [selectedMasach, setSelectedMasach] = useState('');
     const [selectedTensach, setSelectedTensach] = useState('');
     const [selectedVitri, setSelectedVitri] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [dataBooks, setDataBooks] = useState([]); // Thêm state cho dataBooks
+    const [dataBooks, setDataBooks] = useState(propDataBooks || []);
     const [filteredBooks, setFilteredBooks] = useState([]);
     const [hoveredCard, setHoveredCard] = useState(null);
     const navigate = useNavigate();
 
-    // Logic gọi API
+    // Logic gọi API chỉ khi không có propDataBooks
     useEffect(() => {
         const fetchSearchResults = async () => {
             try {
@@ -70,8 +73,13 @@ function MainBooks({ isMenuOpen, searchQuery = '', sortOption = '' }) {
             }
         };
 
-        fetchSearchResults();
-    }, [searchQuery]);
+        // Chỉ gọi API nếu không có propDataBooks
+        if (!propDataBooks) {
+            fetchSearchResults();
+        } else {
+            setDataBooks(propDataBooks);
+        }
+    }, [searchQuery, propDataBooks]);
 
     // Lọc và sắp xếp sách
     useEffect(() => {
@@ -124,7 +132,7 @@ function MainBooks({ isMenuOpen, searchQuery = '', sortOption = '' }) {
                 sortedBooks.sort((a, b) => a.tensach.localeCompare(b.tensach));
                 break;
             case 'za':
-                sortedBooks.sort((a, b) => b.tensach.localeCompare(a.tensach));
+                sortedBooks.sort((a, b) => b.tensach.localeCompare(b.tensach));
                 break;
             case 'mostBorrowed':
                 sortedBooks.sort((a, b) => {
@@ -138,13 +146,6 @@ function MainBooks({ isMenuOpen, searchQuery = '', sortOption = '' }) {
         }
         return sortedBooks;
     };
-
-    useEffect(() => {
-        const filtered = filterBooks(searchQuery);
-        const sorted = sortBooks(filtered);
-        setFilteredBooks(sorted);
-        setCurrentPage(1);
-    }, [dataBooks, searchQuery, sortOption]);
 
     const totalPages = Math.ceil(filteredBooks.length / ITEMS_PER_PAGE);
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
