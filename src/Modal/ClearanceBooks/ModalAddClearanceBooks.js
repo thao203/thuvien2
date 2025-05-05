@@ -69,7 +69,7 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
             setFilteredLocations(data);
         } catch (error) {
             console.error('Error fetching locations:', error);
-            toast.error('KhÃ´ng thá»ƒ táº£i danh sÃ¡ch vá»‹ trÃ­!', toastOptions);
+            toast.error('Không thể tải danh sách vị trí!', toastOptions);
             setLocations([]);
             setFilteredLocations([]);
         } finally {
@@ -99,11 +99,11 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
             setBooks(data);
             setShowBooksDropdown(true);
             if (data.length === 0) {
-                toast.info('KhÃ´ng cÃ³ sÃ¡ch nÃ o táº¡i vá»‹ trÃ­ nÃ y!', toastOptions);
+                toast.info('Không có sách nào tại vị trí này!', toastOptions);
             }
         } catch (error) {
             console.error('Error fetching books by location:', error);
-            toast.error(error.response?.data?.message || 'KhÃ´ng thá»ƒ táº£i danh sÃ¡ch sÃ¡ch!', toastOptions);
+            toast.error(error.response?.data?.message || 'Không thể tải danh sách sách!', toastOptions);
             setBooks([]);
             setShowBooksDropdown(false);
         }
@@ -144,7 +144,7 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
 
     const handleAddClearanceBook = async () => {
         if (!isFormValid()) {
-            toast.error('Vui lÃ²ng Ä‘iá»n Ä‘áº§y Ä‘á»§ thÃ´ng tin báº¯t buá»™c!', toastOptions);
+            toast.error('Vui lòng điền đầy đủ thông tin bắt buộc!', toastOptions);
             return;
         }
 
@@ -159,7 +159,7 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
 
             const res = await request.post('/api/addClearanceBook', payload);
 
-            toast.success(res.data.message || 'ThÃªm sÃ¡ch thanh lÃ½ thÃ nh cÃ´ng!', {
+            toast.success(res.data.message || 'Thêm sách thanh lý thành công!', {
                 ...toastOptions,
                 onClose: () => {
                     handleClose();
@@ -168,7 +168,7 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
             });
         } catch (error) {
             const errorMessage =
-                error.response?.data?.message || 'CÃ³ lá»—i xáº£y ra khi thÃªm sÃ¡ch thanh lÃ½!';
+                error.response?.data?.message || 'Có lỗi xảy ra khi thêm sách thanh lý!';
             toast.error(errorMessage, toastOptions);
         }
     };
@@ -178,7 +178,7 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
             <Modal show={showModalAddClearanceBooks} onHide={handleClose} size="lg">
                 <Modal.Header closeButton className="justify-content-center">
                     <Modal.Title style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
-                        ThÃªm SÃ¡ch Thanh LÃ½
+                        Thêm Sách Thanh Lý
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-4">
@@ -186,10 +186,10 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
                         <Row className="g-3">
                             <Col md={4}>
                                 <Form.Group controlId="formMasachthanhly">
-                                    <Form.Label>MÃ£ SÃ¡ch Thanh LÃ½</Form.Label>
+                                    <Form.Label>Mã Sách Thanh Lý</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        placeholder="Nháº­p mÃ£ sÃ¡ch thanh lÃ½"
+                                        placeholder="Nhập mã sách thanh lý"
                                         value={masachthanhly}
                                         onChange={(e) => setMasachthanhly(e.target.value)}
                                         className="shadow-sm"
@@ -199,10 +199,10 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
                             </Col>
                             <Col md={4} style={{ position: 'relative' }}>
                                 <Form.Group controlId="formMasach">
-                                    <Form.Label>MÃ£ SÃ¡ch</Form.Label>
+                                    <Form.Label>Mã Sách</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        placeholder="Chá»n mÃ£ sÃ¡ch tá»« vá»‹ trÃ­"
+                                        placeholder="Chọn mã sách từ vị trí"
                                         value={masach}
                                         onChange={(e) => setMasach(e.target.value)}
                                         onFocus={() => books.length > 0 && setShowBooksDropdown(true)}
@@ -254,10 +254,10 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
                             </Col>
                             <Col md={4}>
                                 <Form.Group controlId="formSoluong">
-                                    <Form.Label>Sá»‘ LÆ°á»£ng</Form.Label>
+                                    <Form.Label>Số Lượng</Form.Label>
                                     <Form.Control
                                         type="number"
-                                        placeholder="Nháº­p sá»‘ lÆ°á»£ng"
+                                        placeholder="Nhập số lượng"
                                         value={soluong}
                                         onChange={(e) => setSoluong(e.target.value)}
                                         min="1"
@@ -268,10 +268,10 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
                             </Col>
                             <Col md={4} style={{ position: 'relative' }}>
                                 <Form.Group controlId="formMavitri">
-                                    <Form.Label>MÃ£ Vá»‹ TrÃ­</Form.Label>
+                                    <Form.Label>Mã Vị Trí</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        placeholder="Nháº­p hoáº·c chá»n mÃ£ vá»‹ trÃ­"
+                                        placeholder="Nhập hoặc chọn mã vị trí"
                                         value={locationSearchQuery}
                                         onChange={handleLocationInputChange}
                                         onFocus={handleLocationInputFocus}
@@ -324,10 +324,10 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
                             </Col>
                             <Col md={4}>
                                 <Form.Group controlId="formLydo">
-                                    <Form.Label>LÃ½ Do</Form.Label>
+                                    <Form.Label>Lý Do</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        placeholder="Nháº­p lÃ½ do thanh lÃ½"
+                                        placeholder="Nhập lý do thanh lý"
                                         value={lydo}
                                         onChange={(e) => setLydo(e.target.value)}
                                         className="shadow-sm"
@@ -340,7 +340,7 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
                 </Modal.Body>
                 <Modal.Footer className="justify-content-between">
                     <Button variant="secondary" onClick={handleClose} className="px-4">
-                        ÄÃ³ng
+                        Đóng
                     </Button>
                     <Button
                         variant="primary"
@@ -348,7 +348,7 @@ function ModalAddClearanceBooks({ showModalAddClearanceBooks, setShowModalAddCle
                         className="px-4"
                         disabled={!isFormValid()}
                     >
-                        ThÃªm Má»›i
+                        Thêm Mới
                     </Button>
                 </Modal.Footer>
             </Modal>
