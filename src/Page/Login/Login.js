@@ -31,10 +31,9 @@ function Login() {
             const data = { masinhvien, password };
             const res = await request.post('api/login', data);
             if (res.data.token) {
-                const hostname = window.location.hostname;
                 const cookieOptions = {
                     path: '/',
-                    domain: hostname === 'localhost' ? undefined : hostname,
+                    domain: 'https://latn.onrender.com',
                     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
                 };
 
