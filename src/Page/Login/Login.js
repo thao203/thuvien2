@@ -26,35 +26,46 @@ function Login() {
         if (savedPassword) setPassword(savedPassword);
     }, []);
 
+    const clearToken = () => {
+        // Xóa cookie token
+        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        // Xóa token trong localStorage (nếu có)
+        localStorage.removeItem('token');
+    };
+
     const handleLogin = async () => {
         try {
+            // Xóa token cũ trước khi đăng nhập
+            clearToken();
+
             const data = { masinhvien, password };
             const res = await request.post('api/login', data);
+
             if (res.data.token) {
-                const cookieOptions = {
-                    path: '/',
-                    domain: 'https://latn.onrender.com',
-                    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-                };
+                // Lưu token vào cookie
+                const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // Hết hạn sau 7 ngày
+                document.cookie = `token=${res.data.token}; path=/; expires=${expires.toUTCString()}; Secure; SameSite=Lax`;
 
-                const cookieString = Object.entries(cookieOptions)
-                    .filter(([key, value]) => value !== undefined)
-                    .map(([key, value]) => `${key}=${value}`)
-                    .join('; ');
+                // (Tùy chọn) Lưu token vào localStorage để đồng bộ với Connect.js
+                localStorage.setItem('token', res.data.token);
 
-                document.cookie =  `token=${res.data.token}; ${cookieString}`;
-                window.location.href = '/homepage';
-            }
+                // Lưu thông tin đăng nhập nếu được chọn
+                if (checkSaveLogin) {
+                    localStorage.setItem('masinhvien', masinhvien);
+                    localStorage.setItem('password', password);
+                } else {
+                    localStorage.removeItem('masinhvien');
+                    localStorage.removeItem('password');
+                }
 
-            if (checkSaveLogin) {
-                localStorage.setItem('masinhvien', masinhvien);
-                localStorage.setItem('password', password);
+                // Chuyển hướng đến homepage
+                navigate('/homepage');
             } else {
-                localStorage.removeItem('masinhvien');
-                localStorage.removeItem('password');
+                toast.error('Không nhận được token từ server');
             }
         } catch (error) {
-            toast.error(error.response.data.message);
+            console.error('Login error:', error);
+            toast.error(error.response?.data?.message || 'Đăng nhập thất bại');
         }
     };
 
